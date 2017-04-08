@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
@@ -32,8 +33,14 @@ public class AlarmInfoAdapter extends ArrayAdapter<AlarmInfo> {
         if (null == convertView) convertView = mLayoutInflater.inflate(R.layout.list_item, null);
 
         // AlarmInfoのデータをViewの各Widgetにセットする
-        TextView textView = (TextView)convertView.findViewById(R.id.check_box);
-        textView.setText(item.getTextData());
+        TextView textViewListAlarmTime = (TextView)convertView.findViewById(R.id.textView_listAlarmTime);
+        textViewListAlarmTime.setText(item.getAlarmTime());
+
+        TextView textViewListMemo = (TextView)convertView.findViewById(R.id.textView_listMemo);
+        textViewListMemo.setText(item.getMemo());
+
+        Switch switchListAlarmTime = (Switch)convertView.findViewById(R.id.switch_listAlarmTime);
+        switchListAlarmTime.setChecked(item.getAlarmSwitch());
 
         return convertView;
     }

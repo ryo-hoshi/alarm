@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import apl.r_m_unt.mydearladyalarm.dummy.AlarmContent;
 
@@ -78,20 +80,39 @@ public class ItemListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+
         // 保存情報を取得
-        SharedPreferences prefs = this.getActivity().getSharedPreferences(ARG_ITEM_ID + "_" + listIndex, Context.MODE_PRIVATE);
+        SharedPreferences prefs = this.getActivity().getSharedPreferences("MyDearLadyAlarm", Context.MODE_PRIVATE);
         String hour = prefs.getString("hour", "0000");
         String minute = prefs.getString("min", "0000");
         boolean snoozeFlg = prefs.getBoolean("snoozeFlg", false);
         int snoozeTime = prefs.getInt("snoozeTime", 0);
         String msgKind = prefs.getString("msgKind", "");
 
-        // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<AlarmContent.AlarmItem>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                AlarmContent.ITEMS));
+        List<AlarmInfo> alarmInfoList = new ArrayList<AlarmInfo>();
+        AlarmInfo alarmInfo1 = new AlarmInfo("1", 12, 30, "memo1", true);
+        AlarmInfo alarmInfo2 = new AlarmInfo("2", 13, 45, "memo2", false);
+        alarmInfoList.add(alarmInfo1);
+        alarmInfoList.add(alarmInfo2);
+
+        AlarmContent.setItem(alarmInfoList);
+
+        AlarmInfoAdapter alarmInfoAdapter = new AlarmInfoAdapter(getActivity(), 0, AlarmContent.ITEMS);
+        setListAdapter(alarmInfoAdapter);
+
+//        // TODO: replace with a real list adapter.
+//        setListAdapter(new ArrayAdapter<AlarmInfo>(
+//                getActivity(),
+//                android.R.layout.simple_list_item_activated_1,
+//                android.R.id.text1,
+//                AlarmContent.ITEMS));
+
     }
 
     @Override
@@ -126,6 +147,7 @@ public class ItemListFragment extends ListFragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+        mCallbacks = (Callbacks) context;
     }
 
     @Override
@@ -142,7 +164,7 @@ public class ItemListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(AlarmContent.ITEMS.get(position).id);
+        mCallbacks.onItemSelected(AlarmContent.ITEMS.get(position).getId());
     }
 
     @Override
