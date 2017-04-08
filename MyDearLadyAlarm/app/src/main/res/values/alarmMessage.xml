@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="alarm_msg">
+        <item>早く起きなさいよ！</item>
+        <item>お仕事の時間ですよ</item>
+        <item>おはようございますご主人様</item>
+    </string-array>
+</resources>

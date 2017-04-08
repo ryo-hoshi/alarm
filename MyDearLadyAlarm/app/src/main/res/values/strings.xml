@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">MyDearLadyAlarm</string>
+    <string name="title_item_detail">Item Detail</string>
+
+    <string name="alarm_set">アラーム設定</string>
+    <string name="alarm_set_memo">メモ</string>
+    <string name="alarm_set_message">アラームメッセージ</string>
+    <string name="alarm_set_snooze">スヌーズ</string>
+    <string name="alarm_set_snooze_on">ON</string>
+    <string name="alarm_set_snooze_off">OFF</string>
+
+    <string name="alarm_set_save">保存</string>
+    <string name="alarm_set_cancel">キャンセル</string>
+    <string name="alarm_set_delete">削除</string>
+
+</resources>
