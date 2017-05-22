@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1071226550243",
+    "firebase_url": "https://mydearladyalarm01.firebaseio.com",
+    "project_id": "mydearladyalarm01",
+    "storage_bucket": "mydearladyalarm01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071226550243:android:f4bd44043166da46",
+        "android_client_info": {
+          "package_name": "com.rainysky.r_m_unt.mydearladyalarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071226550243-39n48l7j8725emvfkla2epg1csldnj3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhEttCpCnc6YKJPjNBnmoHEFE4VSzue1Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

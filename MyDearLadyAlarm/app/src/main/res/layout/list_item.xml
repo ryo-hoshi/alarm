@@ -18,7 +18,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
+                android:layout_weight="4"
                 android:text="AlarmSetTime"
                 android:textSize="30dp"
                 android:clickable="false"
@@ -28,11 +28,20 @@
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text=""
                 android:id="@+id/switch_listAlarmTime"
                 android:checked="false" />
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:text="index"
+                android:clickable="false"
+                android:focusable="false"
+                android:visibility="invisible"
+                android:id="@+id/textView_listIndex" />
         </LinearLayout>
 
         <TextView
