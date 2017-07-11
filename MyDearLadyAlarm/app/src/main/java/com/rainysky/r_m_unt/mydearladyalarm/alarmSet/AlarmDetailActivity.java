@@ -27,7 +27,7 @@ public class AlarmDetailActivity extends FragmentActivity {
             AlarmDetailFragment alarmDetailFragment = new AlarmDetailFragment();
             // リスト選択情報を設定
             alarmDetailFragment.setArguments(arguments);
-            // コンフィグ明細画面フラグメントを追加
+            // アラーム明細画面フラグメントを追加
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.alarm_detail_container, alarmDetailFragment)
                     .commit();

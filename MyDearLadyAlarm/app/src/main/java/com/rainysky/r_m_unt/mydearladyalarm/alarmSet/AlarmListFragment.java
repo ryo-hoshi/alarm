@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -86,66 +88,66 @@ public class AlarmListFragment extends ListFragment {
 //        // アダプターの設定
 //        setListAdapter(adapter);
 
-        // リスト長押しの処理
-        alarmListView.setOnItemLongClickListener(
-            new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d(TAG, "onItemLongClick arg2 => " + position + " : arg3 => " + id);
-
-                    alarmSelectIndex = position;
-//                    new AlertDialog.Builder(getActivity())
-//                            .setTitle("確認")
-//                            .setMessage("削除しますか？")
-//                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    // OK ボタン押下時
-//                                    Log.d(TAG, "OKボタンを押下しました");
+//        // リスト長押しの処理
+//        alarmListView.setOnItemLongClickListener(
+//            new AdapterView.OnItemLongClickListener() {
+//                @Override
+//                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Log.d(TAG, "onItemLongClick arg2 => " + position + " : arg3 => " + id);
 //
-//                                }
-//                            })
-//                            .setNegativeButton("Cancel", null)
-//                            .show();
-
-//                    new AlertDialog.Builder(getActivity())
-//                            .setTitle("確認")
-//                            .setMessage("削除しますか？")
-//                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    // OK ボタン押下時
-//                                    Log.d(TAG, "OKボタンを押下しました。"+ "which:"+ which);
-//                                    removeAlarmInfo(alarmSelectIndex);
-//                                }
-//                            })
-//                            .setNegativeButton("Cancel",  null)
-//                            .show();
-                    AlarmDialogFragment alarmDialogFragment = new AlarmDialogFragment() {
-                        @Override
-                        public Dialog onCreateDialog(Bundle savedInstanceState) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                builder.setTitle("確認")
-                                        .setMessage("削除しますか？")
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // OK ボタン押下時
-                                        Log.d(TAG, "OKボタンを押下しました。" + "which:" + which);
-                                        removeAlarmInfo(alarmSelectIndex);
-                                    }
-                                })
-                                .setNegativeButton("Cancel", null);
-
-                                return builder.create();
-                            }
-                        };
-                    alarmDialogFragment.show(getFragmentManager(), "AlarmDialogFragment");
-
-                    return true;
-                }
-            }
-        );
+//                    alarmSelectIndex = position;
+////                    new AlertDialog.Builder(getActivity())
+////                            .setTitle("確認")
+////                            .setMessage("削除しますか？")
+////                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+////                                @Override
+////                                public void onClick(DialogInterface dialog, int which) {
+////                                    // OK ボタン押下時
+////                                    Log.d(TAG, "OKボタンを押下しました");
+////
+////                                }
+////                            })
+////                            .setNegativeButton("Cancel", null)
+////                            .show();
+//
+////                    new AlertDialog.Builder(getActivity())
+////                            .setTitle("確認")
+////                            .setMessage("削除しますか？")
+////                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+////                                @Override
+////                                public void onClick(DialogInterface dialog, int which) {
+////                                    // OK ボタン押下時
+////                                    Log.d(TAG, "OKボタンを押下しました。"+ "which:"+ which);
+////                                    removeAlarmInfo(alarmSelectIndex);
+////                                }
+////                            })
+////                            .setNegativeButton("Cancel",  null)
+////                            .show();
+//                    AlarmDialogFragment alarmDialogFragment = new AlarmDialogFragment() {
+//                        @Override
+//                        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                                builder.setTitle("確認")
+//                                        .setMessage("削除しますか？")
+//                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        // OK ボタン押下時
+//                                        Log.d(TAG, "OKボタンを押下しました。" + "which:" + which);
+//                                        removeAlarmInfo(alarmSelectIndex);
+//                                    }
+//                                })
+//                                .setNegativeButton("Cancel", null);
+//
+//                                return builder.create();
+//                            }
+//                        };
+//                    alarmDialogFragment.show(getFragmentManager(), "AlarmDialogFragment");
+//
+//                    return true;
+//                }
+//            }
+//        );
 
 //        // アラームON／OFFを切り替えた時の処理
 //        //view.findViewById(R.id.switch_listAlarmTime).setOnClickListener(new View.OnClickListener() {
@@ -218,8 +220,14 @@ public class AlarmListFragment extends ListFragment {
 
         // アラーム情報の追加
 //        alarmSettingInfoList = alarmSetting.getAddedAlarmSettingInfoList();
-        alarmSetting.addAlarmSettingInfo();
-        updateAlarmInfoList();
+        int alarmIndex = alarmSetting.addAlarmSettingInfo();
+        Toast.makeText(this.getActivity().getApplicationContext(),"生成したインデックス：" + String.valueOf(alarmIndex), Toast.LENGTH_SHORT).show();
+        //updateAlarmInfoList();
+        // 追加したアラームの明細画面に遷移
+        int position = alarmSetting.getAlarmSetSize() - 1;
+        Intent alarmDetailIntent = new Intent(getActivity(), AlarmDetailActivity.class);
+        alarmDetailIntent.putExtra(AlarmDetailFragment.ALARM_SELECT_NO, position);
+        startActivity(alarmDetailIntent);
     }
 
     /*
@@ -254,6 +262,32 @@ public class AlarmListFragment extends ListFragment {
         //alarmSettingInfoList = alarmSetting.getRemovedAlarmSettingInfoList(listIndex);
         alarmSetting.removedAlarmSettingInfo(listIndex);
         updateAlarmInfoList();
+    }
+
+    private void onDeleteClick(int position) {
+
+        alarmSelectIndex = position;
+
+        AlarmDialogFragment alarmDialogFragment = new AlarmDialogFragment() {
+            @Override
+            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("確認")
+                        .setMessage("削除しますか？")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // OK ボタン押下時
+                                Log.d(TAG, "OKボタンを押下しました。" + "which:" + which);
+                                removeAlarmInfo(alarmSelectIndex);
+                            }
+                        })
+                        .setNegativeButton("Cancel", null);
+
+                return builder.create();
+            }
+        };
+        alarmDialogFragment.show(getFragmentManager(), "AlarmDialogFragment");
     }
 
     /*
@@ -325,7 +359,11 @@ public class AlarmListFragment extends ListFragment {
             Switch switchListAlarmTime = (Switch)rowView.findViewById(R.id.switch_listAlarmTime);
             switchListAlarmTime.setChecked(item.getAlarmSwitch());
 
-            // 初回のみイベント登録
+            // 削除ボタン
+            ImageButton imageButtonDelete = (ImageButton)rowView.findViewById(R.id.imageButton_delete);
+
+            // ---------- 初回のみイベント登録 ----------
+            // アラームスイッチ
             if (switchListAlarmTime.getTag() == null) {
                 switchListAlarmTime.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -342,8 +380,28 @@ public class AlarmListFragment extends ListFragment {
                     }
                 });
             }
+            // 削除ボタン
+            if (imageButtonDelete.getTag() == null) {
+                imageButtonDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 最新のpositionを取得
+                        int position = (int)v.getTag();
+                        // 上記positionからデータを取得
+                        AlarmSettingInfo alarmSettingInfo = alarmInfoAdapter.getItem(position);
+                        Log.d(TAG, "imageButtonDelete onClick呼ばれた" + "position:" + position);
+                        // アラームを削除する
+                        //onDeleteClick(position);
+                        removeAlarmInfo(position);
+//                        // アラーム設定を更新
+//                        updateAlarmInfo(position, alarmSettingInfo);
+                    }
+                });
+            }
+
             // 最新のpositionをOnクリックイベントで使用するために保存する
             switchListAlarmTime.setTag(position);
+            imageButtonDelete.setTag(position);
 
             return rowView;
         }

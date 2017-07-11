@@ -55,7 +55,7 @@ public class AlarmSetting {
         AlarmSetting instance = new AlarmSetting();
         //instance.alarmSettingInfoList = new ArrayList<>();
         // アラーム情報のインデックスに0を指定
-        instance.alarmSettingInfoList.add(new AlarmSettingInfo(0));
+        instance.alarmSettingInfoList.add(new AlarmSettingInfo(0, 0));
 
         return instance;
     }
@@ -76,10 +76,12 @@ public class AlarmSetting {
 //        alarmSettingInfoList.add(new AlarmSettingInfo());
 //        return alarmSettingInfoList;
 //    }
-    public void addAlarmSettingInfo() {
-        int index = getAlarmIndex();
-        Log.d(TAG, "生成したインデックス：" + index);
-        alarmSettingInfoList.add(new AlarmSettingInfo(index));
+    public int addAlarmSettingInfo() {
+        int alarmNo = this.getAlarmNo();
+        int alarmIndex = alarmSettingInfoList.size();
+        Log.d(TAG, "生成したアラームNo：" + alarmNo);
+        alarmSettingInfoList.add(new AlarmSettingInfo(alarmNo, alarmIndex));
+        return alarmNo;
     }
 
 //    public List<AlarmSettingInfo> getRemovedAlarmSettingInfoList(int index) {
@@ -104,35 +106,36 @@ public class AlarmSetting {
      * アラーム情報インデックスを取得
      * @return
      */
-    private int getAlarmIndex() {
+    private int getAlarmNo() {
 
         // アラーム情報が存在しない場合は無条件で0
         if (alarmSettingInfoList.isEmpty()) {
             return 0;
         }
 
-        // 既存のインデックスとかぶらない値を取得
-        // 候補のインデックスを取得
-        int index = alarmSettingInfoList.size();
+        // 既存のアラームNoとかぶらない値を取得
+        // 候補のアラームNoを取得
+        int alarmNo = alarmSettingInfoList.size();
         int maxIndex = 0;
         boolean isIndexExist = false;
 
         for (AlarmSettingInfo alarmSettingInfo : alarmSettingInfoList) {
-            if (index == alarmSettingInfo.getAlarmNo()) {
+            if (alarmNo == alarmSettingInfo.getAlarmNo()) {
                 isIndexExist = true;
             }
-            if (maxIndex < index) {
-                maxIndex = index;
+            if (maxIndex < alarmNo) {
+                maxIndex = alarmNo;
             }
         }
 
-        // 候補のインデックスが使われていたら最大値＋１を取得
+        // 候補のアラームNoが使われていたら最大値＋１を取得
+        // intの上限まではいかない想定
         if (isIndexExist) {
             return maxIndex + 1;
 
             // 使われていなければ候補をそのまま取得
         } else {
-            return index;
+            return alarmNo;
         }
     }
 }

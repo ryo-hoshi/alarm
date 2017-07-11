@@ -358,7 +358,7 @@ public class AlarmDetailFragment extends Fragment {
      */
     private AlarmSettingInfo getScreenValue() {
 
-        int alarmNo = Integer.parseInt(textViewAlarmNo.toString());
+        int alarmNo = Integer.parseInt(textViewAlarmNo.getText().toString());
         // 時間
         TimePicker timePicker = (TimePicker)getView().findViewById(R.id.timePicker);
         int hour;

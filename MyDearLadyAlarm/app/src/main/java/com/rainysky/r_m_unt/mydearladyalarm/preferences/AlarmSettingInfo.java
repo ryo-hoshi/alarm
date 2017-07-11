@@ -16,7 +16,7 @@ public class AlarmSettingInfo {
     private int alarmMsgNo;
     private String memo;
 
-    AlarmSettingInfo(int alarmNo) {
+    AlarmSettingInfo(int alarmNo, int alarmIndex) {
         this.alarmNo = alarmNo;
         this.hour = 0;
         this.minute = 0;
@@ -24,7 +24,7 @@ public class AlarmSettingInfo {
         //this.snoozeFlg = false;
         //this.snoozeTime = "0分";
         this.alarmMsgNo = 0;
-        this.memo = "";
+        this.memo = "アラーム" + (alarmIndex + 1 );
     }
 
     public AlarmSettingInfo(int alarmNo,
