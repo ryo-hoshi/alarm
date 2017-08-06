@@ -25,18 +25,30 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".main.MainActivity">
+        <activity
+            android:name=".main.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".info.InfoActivity" />
-        <activity android:name=".alarmSet.AlarmListActivity" />
-        <activity android:name=".config.ConfigActivity" />
-        <activity android:name=".config.ConfigDetailActivity" />
-        <activity android:name=".alarmSet.AlarmDetailActivity" />
+        <activity
+            android:name=".info.InfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".alarmSet.AlarmListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".config.ConfigActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".config.ConfigDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".alarmSet.AlarmDetailActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- [START firebase_service] -->
         <service android:name=".push.AlarmFirebaseMessagingService">
@@ -57,9 +69,13 @@
             android:name=".alarm.AlarmBroadcastReceiver"
             android:process=":remote" />
 
-        <activity android:name=".alarm.SoundActivity" />
-        <activity android:name=".push.PushReceiveActivity"
-            android:launchMode="singleTask">
+        <activity
+            android:name=".alarm.SoundActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".push.PushReceiveActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="PUSH" />
                 <category android:name="android.intent.category.DEFAULT" />
