@@ -7,57 +7,63 @@
     android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageButton
+            android:id="@+id/imageButton_delete"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/laala" />
+
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageButton
-                android:id="@+id/imageButton_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@mipmap/ic_launcher" />
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="AlarmSetTime"
+                    android:textSize="22sp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:id="@+id/textView_listAlarmTime" />
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text=""
+                    android:id="@+id/switch_listAlarmTime"
+                    android:checked="false" />
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:text="AlarmSetTime"
-                android:textSize="30dp"
+                android:text="New Text"
+                android:textSize="14sp"
                 android:clickable="false"
                 android:focusable="false"
-                android:id="@+id/textView_listAlarmTime" />
-
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text=""
-                android:id="@+id/switch_listAlarmTime"
-                android:checked="false" />
-
+                android:id="@+id/textView_listMemo" />
             <TextView
                 android:layout_width="1dp"
-                android:layout_height="wrap_content"
+                android:layout_height="1dp"
                 android:text="index"
                 android:clickable="false"
                 android:focusable="false"
                 android:visibility="invisible"
                 android:id="@+id/textView_listIndex" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:clickable="false"
-            android:focusable="false"
-            android:id="@+id/textView_listMemo" />
     </LinearLayout>
+
 </LinearLayout>

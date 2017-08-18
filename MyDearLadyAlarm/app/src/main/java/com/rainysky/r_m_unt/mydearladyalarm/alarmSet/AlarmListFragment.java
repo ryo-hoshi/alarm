@@ -1,6 +1,5 @@
 package com.rainysky.r_m_unt.mydearladyalarm.alarmSet;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -19,14 +17,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 import com.rainysky.r_m_unt.mydearladyalarm.AlarmConstant;
-import com.rainysky.r_m_unt.mydearladyalarm.alarm.AlarmController;
-import com.rainysky.r_m_unt.mydearladyalarm.AlarmDialogFragment;
 import com.rainysky.r_m_unt.mydearladyalarm.R;
+import com.rainysky.r_m_unt.mydearladyalarm.alarm.AlarmController;
 import com.rainysky.r_m_unt.mydearladyalarm.preferences.AlarmSetting;
 import com.rainysky.r_m_unt.mydearladyalarm.preferences.AlarmSettingInfo;
+
+import java.util.List;
+
+import static com.rainysky.r_m_unt.mydearladyalarm.alarmSet.AlarmDetailFragment.ALARM_SELECT_NO;
 
 /**
  *
@@ -162,13 +161,7 @@ public class AlarmListFragment extends ListFragment {
     public void onStart() {
         super.onStart();
 
-//        // 追加ボタンをクリックした時の処理
-//        this.getView().findViewById(R.id.button_alarm_add).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                addAlarmInfo();
-//            }
-//        });
+
     }
 
     @Override
@@ -202,19 +195,13 @@ public class AlarmListFragment extends ListFragment {
     public void addAlarmInfo() {
 
         if (AlarmConstant.ALARM_SET_MAX_SIZE <= alarmSetting.getAlarmSetSize()) {
-            //TODO 10件すでに登録済みの場合はメッセージを出す
-            AlarmDialogFragment alarmDialogFragment = new AlarmDialogFragment() {
-                @Override
-                public Dialog onCreateDialog(Bundle savedInstanceState) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("確認")
-                            .setMessage("アラームの設定数は10件までです")
-                            .setPositiveButton("OK", null);
+            // 10件すでに登録済みの場合はメッセージを出す
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(String.format(getActivity().getString(R.string.over_alarm_add_title), "10"))
+                    .setMessage(R.string.over_alarm_add_msg)
+                    .setPositiveButton("OK", null)
+                    .show();
 
-                    return builder.create();
-                }
-            };
-            alarmDialogFragment.show(getFragmentManager(), "AlarmDialogFragment");
             return;
         }
 
@@ -226,7 +213,7 @@ public class AlarmListFragment extends ListFragment {
         // 追加したアラームの明細画面に遷移
         int position = alarmSetting.getAlarmSetSize() - 1;
         Intent alarmDetailIntent = new Intent(getActivity(), AlarmDetailActivity.class);
-        alarmDetailIntent.putExtra(AlarmDetailFragment.ALARM_SELECT_NO, position);
+        alarmDetailIntent.putExtra(ALARM_SELECT_NO, position);
         startActivity(alarmDetailIntent);
     }
 
@@ -252,42 +239,28 @@ public class AlarmListFragment extends ListFragment {
     /*
      * アラームの削除
      */
-    public void removeAlarmInfo(int listIndex) {
+    private void removeAlarmInfo(int listIndex) {
 
         if (listIndex < 0 || alarmSetting.getAlarmSetSize() <= listIndex) {
             return;
         }
-
+        alarmSelectIndex = listIndex;
         // アラーム情報の削除
-        //alarmSettingInfoList = alarmSetting.getRemovedAlarmSettingInfoList(listIndex);
-        alarmSetting.removedAlarmSettingInfo(listIndex);
-        updateAlarmInfoList();
-    }
-
-    private void onDeleteClick(int position) {
-
-        alarmSelectIndex = position;
-
-        AlarmDialogFragment alarmDialogFragment = new AlarmDialogFragment() {
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("確認")
-                        .setMessage("削除しますか？")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+        // 縦固定なので、画面向き変更時のメモリリーク発生は考慮不要
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getActivity().getString(R.string.confirm_alarm_delete))
+                .setMessage(alarmSettingInfoList.get(alarmSelectIndex).getMemo())
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
                                 // OK ボタン押下時
-                                Log.d(TAG, "OKボタンを押下しました。" + "which:" + which);
-                                removeAlarmInfo(alarmSelectIndex);
+                                Log.d(TAG, "アラーム削除ダイアログのOKボタンを押下しました。" + "whichButton:" + whichButton);
+                                alarmSetting.removedAlarmSettingInfo(alarmSelectIndex);
+                                updateAlarmInfoList();
                             }
                         })
-                        .setNegativeButton("Cancel", null);
-
-                return builder.create();
-            }
-        };
-        alarmDialogFragment.show(getFragmentManager(), "AlarmDialogFragment");
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     /*
@@ -304,7 +277,7 @@ public class AlarmListFragment extends ListFragment {
 //        configDetailIntent.putExtra(ConfigDetailFragment.CONFIG_SELECT_NO, position);
 //        startActivity(configDetailIntent);
         Intent alarmDetailIntent = new Intent(getActivity(), AlarmDetailActivity.class);
-        alarmDetailIntent.putExtra(AlarmDetailFragment.ALARM_SELECT_NO, position);
+        alarmDetailIntent.putExtra(ALARM_SELECT_NO, position);
         startActivity(alarmDetailIntent);
     }
 
@@ -391,8 +364,8 @@ public class AlarmListFragment extends ListFragment {
                         AlarmSettingInfo alarmSettingInfo = alarmInfoAdapter.getItem(position);
                         Log.d(TAG, "imageButtonDelete onClick呼ばれた" + "position:" + position);
                         // アラームを削除する
-                        //onDeleteClick(position);
                         removeAlarmInfo(position);
+
 //                        // アラーム設定を更新
 //                        updateAlarmInfo(position, alarmSettingInfo);
                     }
