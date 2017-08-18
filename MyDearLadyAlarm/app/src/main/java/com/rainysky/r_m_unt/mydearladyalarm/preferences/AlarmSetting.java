@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ryota on 2017/04/21.
+ * アラーム設定クラス
+ * アラーム情報の管理を行う
+ *
  */
 public class AlarmSetting {
 

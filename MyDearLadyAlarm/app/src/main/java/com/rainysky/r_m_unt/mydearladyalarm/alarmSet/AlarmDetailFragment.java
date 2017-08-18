@@ -1,10 +1,10 @@
 package com.rainysky.r_m_unt.mydearladyalarm.alarmSet;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.rainysky.r_m_unt.mydearladyalarm.AlarmDialogFragment;
 import com.rainysky.r_m_unt.mydearladyalarm.R;
 import com.rainysky.r_m_unt.mydearladyalarm.alarm.AlarmController;
 import com.rainysky.r_m_unt.mydearladyalarm.preferences.AlarmSetting;
@@ -75,21 +74,6 @@ public class AlarmDetailFragment extends Fragment {
         // アラームを24時間表記に設定
         timePicker.setIs24HourView(true);
 
-//        // スヌーズ時間の選択値を設定
-//        adapterSnoozeTime = ArrayAdapter.createFromResource(
-//                getActivity(), R.array.snooze_time_val,
-//                android.R.layout.simple_spinner_item);
-//        adapterSnoozeTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerSnoozeTime.setAdapter(adapterSnoozeTime);
-//        adapterSnoozeTime = new ArrayAdapter<>(
-//                getActivity(),
-//                R.layout.support_simple_spinner_dropdown_item,
-        //R.array.snooze_time_val);
-        // new Integer[]{1,2,3,4,5});
-        //AlarmConstant.snoozeTimeVal);
-        //spinnerSnoozeTime.setAdapter(adapterSnoozeTime);
-
-
         //----------------------------
         // リスト画面から取得したインデックスを取得
         Bundle arguments =  getArguments();
@@ -100,28 +84,6 @@ public class AlarmDetailFragment extends Fragment {
         // 表示するアラーム1件分の情報を取得
         AlarmSettingInfo alarmInfo = alarmSetting.getAlarmSettingInfoList().get(listIndex);
         setScreenValue(alarmInfo);
-//        // 保存情報を取得
-//        SharedPreferences prefs = this.getActivity().getSharedPreferences(ARG_ITEM_ID + "_" + listIndex, Context.MODE_PRIVATE);
-//        String hour = prefs.getString("hour", "0000");
-//        String minute = prefs.getString("min", "0000");
-//        boolean snoozeFlg = prefs.getBoolean("snoozeFlg", false);
-//        int snoozeTime = prefs.getInt("snoozeTime", 0);
-//        String msgKind = prefs.getString("msgKind", "");
-
-
-//        // スヌーズ設定変更時
-//        switchSnooze.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked == true) {
-//                    spinnerSnoozeTime.setEnabled(true);
-//                    isSnoozeOn = true;
-//                } else {
-//                    spinnerSnoozeTime.setEnabled(false);
-//                    isSnoozeOn = false;
-//                }
-//            }
-//        });
 
         // 保存ボタン押下時の処理
         view.findViewById(R.id.button_save).setOnClickListener(new View.OnClickListener() {
@@ -135,17 +97,11 @@ public class AlarmDetailFragment extends Fragment {
                 // アラーム設定を保存
                 alarmSetting.saveInstance(getActivity().getApplicationContext());
 
-//                alarmSetting.getAlarmSettingInfoList().set(listIndex, currentAlarmSet);
-
-//                // AlarmListFragmentの処理を呼び出す
-//                Fragment fragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_alarm_list);
-//                if (fragment != null && fragment instanceof AlarmListFragment) {
-//                    ((AlarmListFragment) fragment).updateAlarmInfo(listIndex, currentAlarmSet);
-//                }
-
                 // アラーム実行の準備
                 AlarmController alarmController = new AlarmController(getActivity());
                 alarmController.setAlarm(currentAlarmSet);
+                // アラーム情報の変更内容を保存
+                alarmSetting.saveInstance(getActivity().getApplicationContext());
 
                 // 当画面のActivityを終了する
                 getActivity().finish();
@@ -161,56 +117,25 @@ public class AlarmDetailFragment extends Fragment {
                     return;
                 }
 
-//                new AlertDialog.Builder(getActivity())
-//                        .setTitle("確認")
-//                        .setMessage("削除しますか？")
-//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // OK ボタン押下時
-//                                Log.d(TAG, "OKボタンを押下しました。" + "which:" + which);
-//                                // アラーム設定情報削除
-//                                alarmSetting.removedAlarmSettingInfo(listIndex);
-//                                // アラーム設定を保存
-//                                alarmSetting.saveInstance(getActivity().getApplicationContext());
-//                                // 当画面のActivityを終了する
-//                                getActivity().finish();
-//                            }
-//                        })
-//                        .setNegativeButton("Cancel",  null)
-//                        .show();
-                AlarmDialogFragment alarmDialogFragment = new AlarmDialogFragment() {
-                    @Override
-                    public Dialog onCreateDialog(Bundle savedInstanceState) {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                        builder.setTitle("確認")
-                                .setMessage("削除しますか？")
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(getActivity().getString(R.string.confirm_alarm_delete))
+                        .setMessage(editTextMemo.getText())
+                        .setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
                                         // OK ボタン押下時
-                                        Log.d(TAG, "OKボタンを押下しました。" + "which:" + which);
-                                        // アラーム設定情報削除
+                                        Log.d(TAG, "アラーム削除ダイアログのOKボタンを押下しました。" + "whichButton:" + whichButton);
+                                        // アラーム情報を削除
                                         alarmSetting.removedAlarmSettingInfo(listIndex);
-                                        // アラーム設定を保存
+                                        // 変更内容の保存
                                         alarmSetting.saveInstance(getActivity().getApplicationContext());
+
                                         // 当画面のActivityを終了する
                                         getActivity().finish();
                                     }
                                 })
-                                .setNegativeButton("Cancel",  null);
-
-                        return builder.create();
-                    }
-                };
-                alarmDialogFragment.show(getFragmentManager(), "AlarmDialogFragment");
-
-//                // アラーム設定情報削除
-//                alarmSetting.removedAlarmSettingInfo(listIndex);
-//                // アラーム設定を保存
-//                alarmSetting.saveInstance(getActivity().getApplicationContext());
-
-
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
             }
         });
 
@@ -329,23 +254,6 @@ public class AlarmDetailFragment extends Fragment {
             timePicker.setCurrentHour(alarmInfo.getHour());
             timePicker.setCurrentMinute(alarmInfo.getMinute());
         }
-
-//        // スヌーズ設定
-//        switchSnooze.setChecked(alarmInfo.getSnoozeFlg());
-//        // スヌーズ時間
-//        spinnerSnoozeTime.setSelection(adapterSnoozeTime.getPosition(alarmInfo.getSnoozeTime()));
-////        int color = Color.BLACK;
-//        if (alarmInfo.getSnoozeFlg()) {
-//            spinnerSnoozeTime.setEnabled(true);
-//            isSnoozeOn = true;
-//        } else {
-//            spinnerSnoozeTime.setEnabled(false);
-//            isSnoozeOn = false;
-////            color = Color.GRAY;
-//        }
-//        // SpinnerからTextViewを取り出してテキストカラーを設定
-//        TextView textView = (TextView) spinnerSnoozeTime.getChildAt(0);
-//        textView.setTextColor(color);
 
         // アラームメッセージ
         spinnerAlarmMsg.setSelection(alarmInfo.getAlarmMsgNo());
